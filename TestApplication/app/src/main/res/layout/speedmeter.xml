@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="342dp"
+    android:background="@drawable/figure_bar_small_no_bar"
+    android:layout_weight ="1">
+
+    <FrameLayout
+        android:layout_width="680dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="300dp"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout">
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView" />
+
+        </LinearLayout>
+
+     </FrameLayout>
+    <FrameLayout
+        android:layout_width="415dp"
+        android:layout_height="229dp"
+        android:layout_marginLeft="853dp"
+        android:layout_marginTop="70dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/windowlog">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/loglist" />
+        </LinearLayout>
+
+    </FrameLayout>
+    <com.example.deok.testapplication.FigureBar
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.deok.testapplication"
+            android:id="@+id/Speedometer"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            custom:currentSpeed="100"
+            custom:maxValue="100"
+            custom:minValue="-100"
+            custom:num_of_marking="5"
+            android:layout_marginTop="75dp"
+        android:layout_marginLeft="23dp" />
+
+        <com.example.deok.testapplication.FigureBar
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.deok.testapplication"
+            android:id="@+id/Speedometer1"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            custom:currentSpeed="100"
+            custom:maxValue="4000"
+            custom:minValue="0"
+            custom:num_of_marking="5"
+            android:layout_marginTop="75dp"
+            android:layout_marginLeft="190dp" />
+
+        <com.example.deok.testapplication.FigureBar
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.deok.testapplication"
+            android:id="@+id/Speedometer2"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            custom:currentSpeed="100"
+            custom:maxValue="500"
+            custom:minValue="0"
+            android:layout_marginTop="75dp"
+            android:layout_marginLeft="325dp" />
+
+        <com.example.deok.testapplication.FigureBar
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.deok.testapplication"
+            android:id="@+id/Speedometer3"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            custom:currentSpeed="100"
+            custom:maxValue="50"
+            custom:minValue="0"
+            android:layout_marginTop="75dp"
+            android:layout_marginLeft="460dp" />
+
+        <com.example.deok.testapplication.FigureBar
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.deok.testapplication"
+            android:id="@+id/Speedometer4"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            custom:currentSpeed="100"
+            custom:maxValue="100"
+            custom:minValue="0"
+            android:layout_marginTop="75dp"
+            android:layout_marginLeft="592dp" />
+
+        <com.example.deok.testapplication.FigureBar
+            xmlns:custom="http://schemas.android.com/apk/res/com.example.deok.testapplication"
+            android:id="@+id/Speedometer6"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            custom:currentSpeed="100"
+            custom:maxValue="500"
+            custom:minValue="0"
+            android:layout_marginLeft="725dp"
+            android:layout_marginTop="75dp" />
+
+
+</RelativeLayout>

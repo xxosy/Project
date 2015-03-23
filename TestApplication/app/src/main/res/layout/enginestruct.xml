@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="342dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/engine_struct_small"></RelativeLayout>
+    <com.example.deok.testapplication.ActiveSet
+        android:id="@+id/activeset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="102dp"
+        android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="250"
+        android:id="@+id/generator"
+        android:layout_marginTop="295dp"
+        android:layout_marginLeft="390dp"
+
+
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="101dp"
+        android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="250"
+        android:id="@+id/battery"
+        android:layout_marginLeft="639dp"
+        android:layout_marginTop="295dp"
+
+
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="101dp"
+        android:layout_height="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="350"
+        android:id="@+id/motor"
+        android:layout_marginTop="295dp"
+        android:layout_marginLeft="885dp"
+
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <TextView
+    android:layout_width="102dp"
+    android:layout_height="40dp"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:text="3800"
+    android:id="@+id/engine"
+    android:layout_marginTop="295dp"
+    android:layout_marginLeft="130dp"
+
+    android:gravity="center_horizontal"
+    android:textSize="25dp"
+    android:textStyle="bold" />
+
+
+</RelativeLayout>

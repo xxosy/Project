@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <com.dd.processbutton.FlatButton xmlns:custom = "http://schemas.android.com/apk/res-auto"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="블루투스 연결"
+        android:id="@+id/button_connect"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark"
+        android:layout_marginBottom="5dp" />
+
+    <com.dd.processbutton.FlatButton xmlns:custom = "http://schemas.android.com/apk/res-auto"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="블루투스 연결 해제"
+        android:id="@+id/button_free"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark"
+        android:layout_marginBottom="5dp" />
+
+    <com.dd.processbutton.FlatButton xmlns:custom = "http://schemas.android.com/apk/res-auto"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="베터리 모드"
+        android:id="@+id/button_battery"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark"
+        android:layout_marginBottom="5dp" />
+
+    <com.dd.processbutton.FlatButton xmlns:custom = "http://schemas.android.com/apk/res-auto"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="모터모드"
+        android:id="@+id/button_motor"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark"
+        android:layout_marginBottom="5dp" />
+
+    <com.dd.processbutton.FlatButton xmlns:custom = "http://schemas.android.com/apk/res-auto"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button5"
+        android:textColor="@android:color/white"
+        custom:pb_colorNormal="@android:color/holo_blue_light"
+        custom:pb_colorPressed="@android:color/holo_blue_dark" />
+</LinearLayout>
