@@ -18,7 +18,7 @@ public class SpeedmeterMenu extends Dialog implements View.OnClickListener {
     Button btnConnect;
     Button btnConnectFree;
     Button btnBatteryMode;
-    Button btnMotorMode;
+    Button btnLog;
     Handler handler;
 
     public SpeedmeterMenu(Context context) {
@@ -31,8 +31,8 @@ public class SpeedmeterMenu extends Dialog implements View.OnClickListener {
         btnConnectFree.setOnClickListener(this);
         btnBatteryMode = (Button)findViewById(R.id.button_battery);
         btnBatteryMode.setOnClickListener(this);
-        btnMotorMode = (Button)findViewById(R.id.button_motor);
-        btnMotorMode.setOnClickListener(this);
+        btnLog = (Button)findViewById(R.id.button_log);
+        btnLog.setOnClickListener(this);
 
     }
     public void setHandler(Handler handler){
@@ -55,7 +55,7 @@ public class SpeedmeterMenu extends Dialog implements View.OnClickListener {
             msg.arg1 = 3;
             handler.sendMessage(msg);
             dismiss();
-        }else if(v == btnMotorMode) {
+        }else if(v == btnLog) {
             Message msg = handler.obtainMessage();
             msg.arg1 = 4;
             handler.sendMessage(msg);

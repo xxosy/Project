@@ -1,50 +1,40 @@
 package com.example.deok.testapplication;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.media.Image;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.ls.LSException;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Random;
-
-import java.util.logging.LogRecord;
-
-import static android.graphics.Color.WHITE;
 
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
@@ -64,7 +54,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     FigureBar figureBar_Discharge;
     FigureBar figureBar_Energy;
     FigureBar[] mFigureBar;
-
+    FileOutputStream fos;
+    FileInputStream fis;
+    File file;
+    String path;
+    String fileName;
+    File saveFile;
     private ActiveSet activeSet;
     ListView listView;
     FrameLayout frame;
@@ -88,11 +83,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         Log.e(TAG, "onCreate");
-        tvEngine = (TextView)findViewById(R.id.engine);
-        tvGenerator = (TextView)findViewById(R.id.generator);
-        tvBattery = (TextView)findViewById(R.id.battery);
-        tvMotor = (TextView)findViewById(R.id.motor);
-        activeSet = (ActiveSet)findViewById(R.id.activeset);
         SpeedmeterLayout speedmeterLayout = new SpeedmeterLayout(this);
         speedmeterLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         FigureLayout engineStructLayout = new FigureLayout(this);
@@ -101,6 +91,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         RelativeLayout linearlayout = (RelativeLayout)findViewById(R.id.linearlayout1);
         relative.addView(speedmeterLayout);
         linearlayout.addView(engineStructLayout);
+///////////////////////////////////////////////////////////////////////////////
+        path = getFilesDir().getAbsolutePath();
+        fileName = "log_data.txt";
+        file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        saveFile = new File(path+"/test.txt");
+        fos = null;
+        fis = null;
+        ////////////////////////////////////////////////////////////////////////
+        tvEngine = (TextView)findViewById(R.id.engine);
+        tvGenerator = (TextView)findViewById(R.id.generator);
+        tvBattery = (TextView)findViewById(R.id.battery);
+        tvMotor = (TextView)findViewById(R.id.motor);
+        activeSet = (ActiveSet)findViewById(R.id.activeset);
 
         //final SpeedmeterPackage speedmeterPackage = (SpeedmeterPackage)findViewById(R.id.SpeedometerPackage);
         final Context context = this.getApplicationContext();
@@ -120,7 +126,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }else if(msg.arg1 == 3){
                     //speedmeterPackage.onModeChanged(true);
                 }else if(msg.arg1 == 4) {
-                    //speedmeterPackage.onModeChanged(false);
+                    try {
+                        String loadPath = path+"/test.txt";
+                        fis = new FileInputStream(loadPath);
+                        BufferedReader bufferReader = new BufferedReader(new InputStreamReader(fis));
+                        String content="", temp="";
+                        int count = 0;
+                        ArrayList<String> str = new ArrayList<String>();
+                        LogViewDialog lvDialog = new LogViewDialog(MainActivity.this);
+                        while( (temp = bufferReader.readLine()) != null ) {
+                            str.add(temp);
+                        }
+                        lvDialog.setData(str.size(), str);
+                        lvDialog.show();
+                        Window window = lvDialog.getWindow();
+                        WindowManager.LayoutParams wlp = window.getAttributes();
+                        wlp.gravity = Gravity.LEFT;
+                        window.setAttributes(wlp);
+                        Toast.makeText(MainActivity.this,content,Toast.LENGTH_LONG).show();
+                        fis.close();
+                    } catch (FileNotFoundException e) {
+                        Toast.makeText(MainActivity.this, "Is Not LogFile",Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -135,28 +165,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
         txt_Result = (TextView) findViewById(R.id.txt_result);
-
+        //
    //     btn_Connect.setOnClickListener(this);
         final Random random = new Random();
         final Handler handler = new Handler() {
-            int figure3=0;
-            int indecresend=3;
             char figure = 0;
             char figure2 =0;
 
             ByteBuffer mByteBuffer= ByteBuffer.allocate(1024);
             public void handleMessage(Message msg) {
-                int[] data = new int[5];
-                data[0]=0;
-                data[1]=0;
-                data[2]=0;
-                data[3]=0;
-                data[4]=0;
                 if(msg.arg1 == -1){
                     Toast.makeText(MainActivity.this,"블루투스가 연결 되었습니다.",Toast.LENGTH_SHORT).show();
                 }
-                DataSet mDataSet = new DataSet();
-                mDataSet.setData('S','G',data,'E');
+                DataSet mDataSet;
+                byte[] buffer = new byte[1];
+                buffer[0]='Y';
                 mDataSet = (DataSet)msg.obj;
                 if(mDataSet!=null) {
                     figure = mDataSet.flag;
@@ -164,10 +187,46 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         figure2 = mDataSet.type;
                         if (figure2 == 'G') {
                             for (int i = 0; i < 5; i++)
-                                readData(i,mDataSet.data[i]);
+                                readData(i,mDataSet.data.get(i));
+                            mFigureBar[5].onSpeedChanged(mDataSet.data.get(2)-mDataSet.data.get(3)+mDataSet.data.get(4));
+
                         }else if(figure2 == 'L'){
-                            activeSet.onStateChanged(data);
+                            activeSet.onStateChanged(mDataSet.data);
+
+                        }else if(figure2 == 'D'){
+                            float temp = (float)mDataSet.data.get(0)/1024*102;
+                            float temp1= (float)mDataSet.data.get(1)/1024*102;
+                            float temp2= (float)mDataSet.data.get(2)/1024*400;
+                            float temp3= (float)mDataSet.data.get(3)/1024*102;
+                            tvEngine.setText(String.valueOf((int)temp));
+                            tvGenerator.setText(String.valueOf((int)temp1));
+                            tvBattery.setText(String.valueOf((int)temp2));
+                            tvMotor.setText(String.valueOf((int)temp3));
+
+                        }else if(figure2 == 'A'){
+                            try {
+                                long now = System.currentTimeMillis();
+                                Date date = new Date(now);
+                                SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                String strNow = sdfNow.format(date);
+                            logListAdapter.addItem(mDataSet.msgStr+"  "+strNow);
+                                fos = new FileOutputStream(saveFile,true);
+                                String outStr=mDataSet.msgStr+"       "+strNow+"\n";
+                                fos.write(outStr.getBytes());
+                                fos.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            mListView.setSelection(mAdapter.getCount()-1);
+
+                        }else if(figure2 == 'M'){
+                            mAdapter.addItem(mDataSet.msgStr);
+                            listView.setSelection(mAdapter.getCount()-1);
+
                         }
+                        btService.write(buffer);
                     }
                 }
             }
@@ -177,7 +236,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             btService = new BluetoothService(this, handler);//mHandler);
         }
         //////////////////////////////////////////////////////////////////////////////////////
-        mFigureBar = new FigureBar[5];
+        mFigureBar = new FigureBar[6];
         figureBar_Command = (FigureBar) findViewById(R.id.Speedometer);
         figureBar_Engne = (FigureBar) findViewById(R.id.Speedometer1);
         figureBar_Generation = (FigureBar)findViewById(R.id.Speedometer2);
@@ -186,9 +245,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         figureBar_Energy = (FigureBar)findViewById(R.id.Speedometer6);
         mFigureBar[0] = figureBar_Command;
         mFigureBar[1] = figureBar_Engne;
-        mFigureBar[2] = figureBar_Charge;
-        mFigureBar[3] = figureBar_Discharge;
-        mFigureBar[4] = figureBar_Energy;
+        mFigureBar[2] = figureBar_Generation;
+        mFigureBar[3] = figureBar_Charge;
+        mFigureBar[4] = figureBar_Discharge;
+        mFigureBar[5] = figureBar_Energy;
+
         listView = (ListView) findViewById(R.id.listView);
         mListView =(ListView) findViewById(R.id.loglist);
         mAdapter = new ListViewAdapter(this,0);
@@ -196,18 +257,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         listView.setAdapter(mAdapter);
         mListView.setAdapter(logListAdapter);
 
-        logListAdapter.addItem("WARNING : RPM IS HIGH!!");
-        logListAdapter.addItem("WARNING : RPM IS HIGH!!");
-        logListAdapter.addItem("WARNING : RPM IS HIGH!!");
 
-        mAdapter.addItem("WARNING : RPM IS HIGH!!");
-        mAdapter.addItem("WARNING : RPM IS HIGH!!");
-        mAdapter.addItem("WARNING : POWER IS HIGH!!");
-        mAdapter.addItem("WARNING : RPM IS LOW!!");
-        for(int i =0;i<mAdapter.getCount();i++) {
-            ListData title = (ListData) mAdapter.getItem(i);
-            Log.i(TAG,title.getTitle());
-        }
+        logListAdapter.addItem("System log data display");
+        mAdapter.addItem("User information blank message");
+
         listView.setSelection(mAdapter.getCount()-1);
     }
     private class ViewHolder {
@@ -269,6 +322,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
             mListData.add(addInfo);
+            dataChange();
         }
         public void remove(int position){
             mListData.remove(position);
@@ -280,6 +334,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         public void dataChange(){
             mAdapter.notifyDataSetChanged();
+            logListAdapter.notifyDataSetChanged();
         }
     }
 

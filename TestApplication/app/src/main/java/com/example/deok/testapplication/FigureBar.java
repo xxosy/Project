@@ -123,11 +123,11 @@ public class FigureBar extends View implements SpeedChangeListener {
             this.mCurrentSpeed = 0;
         else
             this.mCurrentSpeed = mCurrentSpeed;*/
-        this.mCurrentSpeed = mCurrentSpeed;
+        this.mCurrentSpeed = mCurrentSpeed/1024*110;
         if(mMinValue<0)
-            this.mCurrentDisplayValue = mCurrentSpeed*2-100;
+            this.mCurrentDisplayValue = ((mCurrentSpeed/1024)*102)*2-100;
         else if(mMinValue==0)
-            this.mCurrentDisplayValue = mCurrentSpeed*(mMaxValue/100);
+            this.mCurrentDisplayValue = (mCurrentSpeed/1024)*110*(mMaxValue/100);
     }
 
     @Override

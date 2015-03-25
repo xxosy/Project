@@ -13,6 +13,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+
 /**
  * Created by YoungWon on 2015-03-18.
  */
@@ -22,7 +24,7 @@ public class ActiveSet extends View {
         int x;
         int y;
     }
-    int[] state;
+    ArrayList<Integer> state;
     Position[] mPosition;
     private float mCurrentFigure;
     private float mMaxFigure;
@@ -62,20 +64,20 @@ public class ActiveSet extends View {
             a.recycle();
         }
 
-        state = new int[8];
+        state = new ArrayList<Integer>();
 
-        for(int i = 0;i<state.length;i++){
+        for(int i = 0;i<9;i++){
             if(i%2==0)
-                state[i]=0;
+                state.add(0);
             else
-                state[i]=1;
+                state.add(1);
         }
 
         initPositon();
         initDrawingTools();
     }
     private void initPositon(){
-        mPosition = new Position[8];
+        mPosition = new Position[9];
         for(int i =0;i<mPosition.length;i++){
             mPosition[i] = new Position();
         }
@@ -95,6 +97,8 @@ public class ActiveSet extends View {
         mPosition[6].y = 148;
         mPosition[7].x = 910;
         mPosition[7].y = 275;
+        mPosition[8].x = 1188;
+        mPosition[8].y = 54;
     }
     private void initDrawingTools(){
         onMarkPaint = new Paint();
@@ -115,7 +119,7 @@ public class ActiveSet extends View {
         return mCurrentFigure;
     }
 
-    public void setCurrentState(int[] state) {
+    public void setCurrentState(ArrayList<Integer> state) {
         this.state = state;
     }
 
@@ -137,22 +141,41 @@ public class ActiveSet extends View {
         drawScaleBackground(canvas);
     }
 
-    private void drawScaleBackground(Canvas canvas){
-        for(int i =0;i<8;i++){
+    private void drawScaleBackground(Canvas canvas) {
+        for (int i = 0; i < 8; i++) {
             offPath.reset();
-            if(state[i]==0) {
+            if (state.get(i) == 0) {
+                onMarkPaint.setStrokeWidth(20);
                 offPath.moveTo(mPosition[i].x, mPosition[i].y);
                 offPath.lineTo(mPosition[i].x - 20, mPosition[i].y);
                 canvas.drawPath(offPath, onMarkPaint);
-            }else if(state[i]==1){
+
+            } else if (state.get(i) == 1) {
                 offPath.moveTo(mPosition[i].x, mPosition[i].y);
                 offPath.lineTo(mPosition[i].x - 20, mPosition[i].y);
                 canvas.drawPath(offPath, offMarkPaint);
             }
         }
+        if(state.get(8)==0) {
+        offPath.reset();
+        for (int j = 0; j < 22; j++) {
+            offPath.moveTo(1188, 54);
+            offPath.lineTo(1189 + j, 54);
+            onMarkPaint.setStrokeWidth(22 - j);
+            canvas.drawPath(offPath, onMarkPaint);
+            }
+        }else if(state.get(8)==1){
+            offPath.reset();
+            for (int j = 0; j < 22; j++) {
+                offPath.moveTo(1070, 55);
+                offPath.lineTo(1069 -j, 55);
+                onMarkPaint.setStrokeWidth(22 - j);
+                canvas.drawPath(offPath, onMarkPaint);
+            }
+        }
     }
 
-    public void onStateChanged(int[] state) {
+    public void onStateChanged(ArrayList<Integer> state) {
         this.setCurrentState(state);
         this.invalidate();
     }

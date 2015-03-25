@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -204,6 +205,7 @@ public class BluetoothService {
 			if (mState != STATE_CONNECTED)
 				return;
 			r = mConnectedThread;
+            r.writeReturn(out);
 		}
 	}
 
@@ -326,31 +328,77 @@ public class BluetoothService {
 			while (true) {
 				try {
                     Log.i(TAG,"START");
+
                     bytes = mmInStream.read(buffer);
                     DataSet mDataSet = new DataSet();
 
-                    if(buffer[bytes-1] !='E')
-                    mmByteBuffer.put(buffer,0,bytes);
+                    if(buffer[bytes-1] !='#') {
+                        mmByteBuffer.put(buffer, 0, bytes);
+                    }
                     else{
-                        int[] data = new int[bytes-3];
+                        ArrayList<Integer> data = new ArrayList<Integer>();
                         mmByteBuffer.put(buffer,0,bytes);
 
                         Message msg = mHandler.obtainMessage();
-                        for(int i = 0;i<bytes-3;i++) {
-                            data[i] = mmByteBuffer.get(i+2);
+                        String msgWarning="No String";
+                        if((char)mmByteBuffer.get(1)=='G') {
+                            int result = 0;
+                            for (int i = 2; (char) mmByteBuffer.get(i) != '#'; i++) {
+
+                                if (i % 4 == 2)
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 1000;
+                                else if (i % 4 == 3)
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 100;
+                                else if (i % 4 == 0)
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 10;
+                                else if (i % 4 == 1) {
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i)));
+                                    data.add(result);
+                                    Log.d(TAG, "buffer[0] : " + result);
+                                    result = 0;
+                                }
+                            }
+                        }else if((char)mmByteBuffer.get(1)=='L'){
+                            for(int i =2;(char)mmByteBuffer.get(i)!='#';i++){
+                                data.add(Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))));
+                            }
+                        }else if((char)mmByteBuffer.get(1)=='D'){
+                            int result = 0;
+                            for (int i = 2; (char) mmByteBuffer.get(i) != '#'; i++) {
+
+                                if (i % 4 == 2)
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 1000;
+                                else if (i % 4 == 3)
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 100;
+                                else if (i % 4 == 0)
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 10;
+                                else if (i % 4 == 1) {
+                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i)));
+                                    data.add(result);
+                                    Log.d(TAG, "buffer[0] : " + result);
+                                    result = 0;
+                                }
+                            }
+                        }else if((char)mmByteBuffer.get(1)=='M'){
+
+                            byte[] str = new byte[mmByteBuffer.position()-2];
+                            for(int i =2;mmByteBuffer.get(i) != 35; i++) {
+                                str[i-2]= mmByteBuffer.get(i);
+                            }
+                            msgWarning = new String(str);
+                        }else if((char)mmByteBuffer.get(1)=='A'){
+
+                            byte[] str = new byte[mmByteBuffer.position()-2];
+                            for(int i =2;mmByteBuffer.get(i) != 35; i++) {
+                                str[i-2]= mmByteBuffer.get(i);
+                            }
+                            msgWarning = new String(str);
                         }
-                        mDataSet.setData((char)mmByteBuffer.get(0),(char)mmByteBuffer.get(1),data, (char)mmByteBuffer.get(7));
+                        Log.d(TAG,String.valueOf((char)mmByteBuffer.get(1)));
+                        Log.d(TAG,msgWarning);
+                        mDataSet.setData((char)mmByteBuffer.get(0),(char)mmByteBuffer.get(1),data, (char)mmByteBuffer.get(23),msgWarning);
                         msg.obj = mDataSet;
                         mHandler.sendMessage(msg);
-                        Log.d(TAG, "buffer[0] : "+(char)mmByteBuffer.get(0));
-                        Log.d(TAG, "buffer[1] : "+(char)mmByteBuffer.get(1));
-                        Log.d(TAG, "buffer[2] : "+mmByteBuffer.get(2));
-                        Log.d(TAG, "buffer[3] : "+mmByteBuffer.get(3));
-                        Log.d(TAG, "buffer[4] : "+mmByteBuffer.get(4));
-                        Log.d(TAG, "buffer[5] : "+mmByteBuffer.get(5));
-                        Log.d(TAG, "buffer[6] : "+mmByteBuffer.get(6));
-                        Log.d(TAG, "buffer[7] : "+(char)mmByteBuffer.get(7));
-
                         mmByteBuffer.clear();
                     }
 //                  Message msg = mHandler.obtainMessage();
@@ -364,11 +412,10 @@ public class BluetoothService {
             }
 		}
 
-		public void write(byte[] buffer) {
+		public void writeReturn(byte[] buffer) {
 			try {
 				mmOutStream.write(buffer);
-
-			} catch (IOException e) {
+               } catch (IOException e) {
 				Log.e(TAG, "Exception during write", e);
 			}
 		}
