@@ -29,8 +29,8 @@ public class SpeedmeterMenu extends Dialog implements View.OnClickListener {
         btnConnect.setOnClickListener(this);
         btnConnectFree = (Button)findViewById(R.id.button_free);
         btnConnectFree.setOnClickListener(this);
-        btnBatteryMode = (Button)findViewById(R.id.button_battery);
-        btnBatteryMode.setOnClickListener(this);
+
+
         btnLog = (Button)findViewById(R.id.button_log);
         btnLog.setOnClickListener(this);
 

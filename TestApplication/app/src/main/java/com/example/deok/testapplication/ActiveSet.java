@@ -33,12 +33,14 @@ public class ActiveSet extends View {
     // Scale drawing tools
     private Paint onMarkPaint;
     private Paint offMarkPaint;
+    private Paint nMarkPaint;
     private Path offPath;
     final RectF oval = new RectF();
 
     // Drawing colors
     private int NOT_ACTIVE_COLOR =Color.argb(255, 0xff,0x00,0x00);
     private int ACTIVE_COLOR = Color.argb(255, 0x00,0x64,0x00);
+    private int NATURE_COLOR = Color.argb(255, 0xff,0xff,0x00);
 
     // Scale configuration
     private float centerX;
@@ -67,10 +69,12 @@ public class ActiveSet extends View {
         state = new ArrayList<Integer>();
 
         for(int i = 0;i<9;i++){
-            if(i%2==0)
+            if(i%3==0)
                 state.add(0);
-            else
+            else if(i%3==1)
                 state.add(1);
+            else
+                state.add(2);
         }
 
         initPositon();
@@ -111,6 +115,11 @@ public class ActiveSet extends View {
         offMarkPaint.setStrokeWidth(20f);
         offMarkPaint.setColor(ACTIVE_COLOR);
         offMarkPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        nMarkPaint = new Paint(onMarkPaint);
+        nMarkPaint.setStrokeWidth(20f);
+        nMarkPaint.setColor(NATURE_COLOR);
+        nMarkPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         offPath = new Path();
     }
@@ -154,6 +163,10 @@ public class ActiveSet extends View {
                 offPath.moveTo(mPosition[i].x, mPosition[i].y);
                 offPath.lineTo(mPosition[i].x - 20, mPosition[i].y);
                 canvas.drawPath(offPath, offMarkPaint);
+            } else if (state.get(i) == 2) {
+                offPath.moveTo(mPosition[i].x, mPosition[i].y);
+                offPath.lineTo(mPosition[i].x - 20, mPosition[i].y);
+                canvas.drawPath(offPath, nMarkPaint);
             }
         }
         if(state.get(8)==0) {

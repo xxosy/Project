@@ -83,14 +83,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         Log.e(TAG, "onCreate");
+        FigureLayout engineStructLayout = new FigureLayout(this);
         SpeedmeterLayout speedmeterLayout = new SpeedmeterLayout(this);
         speedmeterLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        FigureLayout engineStructLayout = new FigureLayout(this);
         engineStructLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         RelativeLayout relative = (RelativeLayout)findViewById(R.id.relativelayout);
         RelativeLayout linearlayout = (RelativeLayout)findViewById(R.id.linearlayout1);
         relative.addView(speedmeterLayout);
         linearlayout.addView(engineStructLayout);
+
+        RelativeLayout clickableArea= (RelativeLayout)findViewById(R.id.clickablearea);
 ///////////////////////////////////////////////////////////////////////////////
         path = getFilesDir().getAbsolutePath();
         fileName = "log_data.txt";
@@ -154,7 +156,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             }
         };
-        relative.setOnClickListener(new View.OnClickListener() {
+        clickableArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SpeedmeterMenu dialog = new SpeedmeterMenu(MainActivity.this);
@@ -174,6 +176,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             ByteBuffer mByteBuffer= ByteBuffer.allocate(1024);
             public void handleMessage(Message msg) {
+                if(msg.arg1==1){
+                    Toast.makeText(MainActivity.this,"연결에 실패하였습니다. 다시 시도하십시오.",Toast.LENGTH_SHORT).show();
+                }
                 if(msg.arg1 == -1){
                     Toast.makeText(MainActivity.this,"블루투스가 연결 되었습니다.",Toast.LENGTH_SHORT).show();
                 }
@@ -209,9 +214,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                 Date date = new Date(now);
                                 SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                                 String strNow = sdfNow.format(date);
-                            logListAdapter.addItem(mDataSet.msgStr+"  "+strNow);
+                            logListAdapter.addItem(mDataSet.msgStr);
                                 fos = new FileOutputStream(saveFile,true);
-                                String outStr=mDataSet.msgStr+"       "+strNow+"\n";
+                                String outStr=mDataSet.msgStr+" "+strNow+"\n";
                                 fos.write(outStr.getBytes());
                                 fos.close();
                             } catch (FileNotFoundException e) {
@@ -224,7 +229,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         }else if(figure2 == 'M'){
                             mAdapter.addItem(mDataSet.msgStr);
                             listView.setSelection(mAdapter.getCount()-1);
-
+                            logListAdapter.addItem("Warning :"+mDataSet.msgStr);
+                            mListView.setSelection(mAdapter.getCount()-1);
                         }
                         btService.write(buffer);
                     }

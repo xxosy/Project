@@ -1,6 +1,7 @@
 package com.example.deok.testapplication;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -16,5 +17,9 @@ public class FigureLayout extends RelativeLayout {
         RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate( R.layout.enginestruct, null );
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         addView(relativeLayout);
+    }
+    public FigureLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
     }
 }

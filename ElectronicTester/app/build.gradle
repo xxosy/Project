@@ -5,13 +5,12 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.example.deok.testapplication"
+        applicationId "com.example.youngwon.electronictester"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -24,5 +23,4 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.0'
 }

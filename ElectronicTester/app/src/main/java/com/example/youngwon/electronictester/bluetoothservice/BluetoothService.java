@@ -1,33 +1,27 @@
-package com.example.deok.testapplication;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.UUID;
+package com.example.youngwon.electronictester.bluetoothservice;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 public class BluetoothService {
-	// Debugging
+
 	private static final String TAG = "BluetoothService";
 
-	// Intent request code
 	private static final int REQUEST_CONNECT_DEVICE = 1;
 	private static final int REQUEST_ENABLE_BT = 2;
 
-	// RFCOMM Protocol
 	private static final UUID MY_UUID = UUID
 			.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -334,82 +328,11 @@ public class BluetoothService {
 				try {
                     Log.i(TAG,"START");
                     bytes = mmInStream.read(buffer);
-                    DataSet mDataSet = new DataSet();
-                    for(int s = 0;s<30;s++) {
-                        Log.d(TAG, "buffer["+s+"] : " +buffer[s]);
-                    }
 
-                    if(buffer[bytes-1] !='#') {
-                        mmByteBuffer.put(buffer, 0, bytes);
-                    }
-                    else{
-                        ArrayList<Integer> data = new ArrayList<Integer>();
-                        mmByteBuffer.put(buffer,0,bytes);
 
-                        Message msg = mHandler.obtainMessage();
-                        String msgWarning="No String";
-                        if((char)mmByteBuffer.get(1)=='G') {
-                            int result = 0;
-                            for (int i = 2; (char) mmByteBuffer.get(i) != '#'; i++) {
+                    mmByteBuffer.clear();
 
-                                if (i % 4 == 2)
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 1000;
-                                else if (i % 4 == 3)
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 100;
-                                else if (i % 4 == 0)
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 10;
-                                else if (i % 4 == 1) {
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i)));
-                                    data.add(result);
-                                    Log.d(TAG, "buffer[0] : " + result);
-                                    result = 0;
-                                }
-                            }
-                        }else if((char)mmByteBuffer.get(1)=='L'){
-                            for(int i =2;(char)mmByteBuffer.get(i)!='#';i++){
-                                data.add(Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))));
-                            }
-                        }else if((char)mmByteBuffer.get(1)=='D'){
-                            int result = 0;
-                            for (int i = 2; (char) mmByteBuffer.get(i) != '#'; i++) {
 
-                                if (i % 4 == 2)
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 1000;
-                                else if (i % 4 == 3)
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 100;
-                                else if (i % 4 == 0)
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i))) * 10;
-                                else if (i % 4 == 1) {
-                                    result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i)));
-                                    data.add(result);
-                                    Log.d(TAG, "buffer[0] : " + result);
-                                    result = 0;
-                                }
-                            }
-                        }else if((char)mmByteBuffer.get(1)=='M'){
-
-                            byte[] str = new byte[mmByteBuffer.position()-2];
-                            for(int i =2;mmByteBuffer.get(i) != 35; i++) {
-                                str[i-2]= mmByteBuffer.get(i);
-                            }
-                            msgWarning = new String(str);
-                        }else if((char)mmByteBuffer.get(1)=='A'){
-
-                            byte[] str = new byte[mmByteBuffer.position()-2];
-                            for(int i =2;mmByteBuffer.get(i) != 35; i++) {
-                                str[i-2]= mmByteBuffer.get(i);
-                            }
-                            msgWarning = new String(str);
-                        }
-                        Log.d(TAG,String.valueOf((char)mmByteBuffer.get(1)));
-                        Log.d(TAG,msgWarning);
-                        mDataSet.setData((char)mmByteBuffer.get(0),(char)mmByteBuffer.get(1),data, (char)mmByteBuffer.get(23),msgWarning);
-                        msg.obj = mDataSet;
-                        mHandler.sendMessage(msg);
-                        mmByteBuffer.clear();
-                    }
-//                  Message msg = mHandler.obtainMessage();
- //                 mHandler.sendMessage(msg);
 
 				} catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
