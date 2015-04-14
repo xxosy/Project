@@ -64,13 +64,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     ListView listView;
     FrameLayout frame;
     int count;
-
+    int ytu;
     //////////////////////////////////////////////////////////////////////////////////
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final String TAG = "Main";
     private TextView txt_Result;
-
+    float batteryVolt;
     private BluetoothService btService = null;
     @Override
     protected  void onStop(){
@@ -165,10 +165,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
-
+        ytu =0;
         txt_Result = (TextView) findViewById(R.id.txt_result);
-        //
+
    //     btn_Connect.setOnClickListener(this);
+        batteryVolt=1;
         final Random random = new Random();
         final Handler handler = new Handler() {
             char figure = 0;
@@ -186,6 +187,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 byte[] buffer = new byte[1];
                 buffer[0]='Y';
                 mDataSet = (DataSet)msg.obj;
+
                 if(mDataSet!=null) {
                     figure = mDataSet.flag;
                     if (figure == 'S') {
@@ -193,15 +195,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         if (figure2 == 'G') {
                             for (int i = 0; i < 5; i++)
                                 readData(i,mDataSet.data.get(i));
-                            mFigureBar[5].onSpeedChanged(mDataSet.data.get(2)-mDataSet.data.get(3)+mDataSet.data.get(4));
+                             mFigureBar[5].onSpeedChanged((int)(((float)mDataSet.data.get(2)/1024*550 - (float)mDataSet.data.get(3)/1024*55 + (float)mDataSet.data.get(4)/1024*110) * batteryVolt / 1000/198*1024));
+
 
                         }else if(figure2 == 'L'){
                             activeSet.onStateChanged(mDataSet.data);
-
                         }else if(figure2 == 'D'){
                             float temp = (float)mDataSet.data.get(0)/1024*102;
                             float temp1= (float)mDataSet.data.get(1)/1024*102;
                             float temp2= (float)mDataSet.data.get(2)/1024*400;
+                            batteryVolt = temp2;
+                            mListView.setSelection(logListAdapter.getCount()-1);
+
                             float temp3= (float)mDataSet.data.get(3)/1024*102;
                             tvEngine.setText(String.valueOf((int)temp));
                             tvGenerator.setText(String.valueOf((int)temp1));
@@ -214,7 +219,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                 Date date = new Date(now);
                                 SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                                 String strNow = sdfNow.format(date);
-                            logListAdapter.addItem(mDataSet.msgStr);
+                                logListAdapter.addItem(mDataSet.msgStr);
                                 fos = new FileOutputStream(saveFile,true);
                                 String outStr=mDataSet.msgStr+" "+strNow+"\n";
                                 fos.write(outStr.getBytes());
@@ -224,13 +229,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            mListView.setSelection(mAdapter.getCount()-1);
+                            mListView.setSelection(logListAdapter.getCount()-1);
 
                         }else if(figure2 == 'M'){
                             mAdapter.addItem(mDataSet.msgStr);
+                            logListAdapter.addItem(mDataSet.msgStr);
+                            mListView.setSelection(logListAdapter.getCount()-1);
                             listView.setSelection(mAdapter.getCount()-1);
-                            logListAdapter.addItem("Warning :"+mDataSet.msgStr);
-                            mListView.setSelection(mAdapter.getCount()-1);
                         }
                         btService.write(buffer);
                     }

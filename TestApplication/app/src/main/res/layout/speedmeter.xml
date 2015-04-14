@@ -19,7 +19,8 @@
             <ListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/listView" />
+                android:id="@+id/listView"
+                android:layout_marginTop="-5dp" />
 
         </LinearLayout>
 
@@ -106,7 +107,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             custom:currentSpeed="100"
-            custom:maxValue="500"
+            custom:maxValue="180"
             custom:minValue="0"
             android:layout_marginLeft="725dp"
             android:layout_marginTop="75dp" />

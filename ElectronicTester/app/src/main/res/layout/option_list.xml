@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/frameLayout1"
+        android:background="#ffffaf4e">
+
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/navdrawer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="?attr/colorPrimaryDark"
+                android:choiceMode="singleChoice"
+                android:layout_marginTop="60dp"
+                android:divider="@android:color/white"
+                android:dividerHeight="1dp"
+                android:drawSelectorOnTop="false"></ListView>
+        </android.support.v4.widget.DrawerLayout>
+        </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:layout_marginTop="60dp"
+        android:background="#ff29ff13"></FrameLayout>
+
+</RelativeLayout>

@@ -336,7 +336,7 @@ public class BluetoothService {
                     bytes = mmInStream.read(buffer);
                     DataSet mDataSet = new DataSet();
                     for(int s = 0;s<30;s++) {
-                        Log.d(TAG, "buffer["+s+"] : " +buffer[s]);
+
                     }
 
                     if(buffer[bytes-1] !='#') {
@@ -361,7 +361,7 @@ public class BluetoothService {
                                 else if (i % 4 == 1) {
                                     result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i)));
                                     data.add(result);
-                                    Log.d(TAG, "buffer[0] : " + result);
+
                                     result = 0;
                                 }
                             }
@@ -382,7 +382,7 @@ public class BluetoothService {
                                 else if (i % 4 == 1) {
                                     result += Integer.valueOf(String.valueOf((char) mmByteBuffer.get(i)));
                                     data.add(result);
-                                    Log.d(TAG, "buffer[0] : " + result);
+
                                     result = 0;
                                 }
                             }
